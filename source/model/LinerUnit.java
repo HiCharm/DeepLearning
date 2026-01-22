@@ -1,24 +1,22 @@
 package source.model;
 
 import source.unit.Matrix;
+import source.util.AdvanceMatrixMath;
 import source.util.CsvReader;
 import source.util.DataSpliter;
 import source.util.MatrixMath;
-import source.util.AdvanceMatrixMath;
 
-public class Perceptron {
+public class LinerUnit{
     static int splitRatio = 80;
-    static String dataPath = "d:\\work\\2026\\DeepLearning\\Data\\TrueFalseData\\and.csv";
-    static double learningRate = 0.1;
-    static int maxEpoch = 10;
-
+    static String dataPath = "d:\\work\\2026\\DeepLearning\\Data\\RegressionData\\y=100x+1.csv";
+    static double learningRate = 0.0001;
+    static int maxEpoch = 50;
     static Matrix weights = null;
     static double bias = 0.0;
 
     public static double stepFunction(double x) {
-        return x >= 0 ? 1.0 : 0.0;
+        return x;
     }
-
     // features： n * x
     // weights: x * 1
     // y_pred: n * 1
@@ -82,7 +80,7 @@ public class Perceptron {
         forward(features, y_pred);
         int correctCount = 0;
         for (int i = 0; i < lables.getHeight(); i++) {
-            if (y_pred.get(i, 0) == lables.get(i, 0)) {
+            if (y_pred.get(i, 0) - lables.get(i, 0) < 1) {
                 correctCount++;
             }
         }

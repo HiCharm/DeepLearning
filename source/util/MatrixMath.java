@@ -194,16 +194,29 @@ public class MatrixMath {
     }
 
     /**
-     * 矩阵转置，覆盖
+     * 矩阵转置,有返回值
      */
-    public static void transpose(Matrix matrix){
+    public static Matrix transpose(Matrix matrix){
+        Matrix result = new Matrix(matrix.getHeight(), matrix.getWidth());
         for (int i = 0; i < matrix.getHeight(); i++) {
-            for (int j = i + 1; j < matrix.getHeight(); j++) {
-                double temp = matrix.get(i, j);
-                matrix.set(i, j, matrix.get(j, i));
-                matrix.set(j, i, temp);
+            for (int j = 0; j < matrix.getWidth(); j++) {
+                result.set(j, i, matrix.get(i, j));
             }
         }
+        return result;
     }
+
+
+    /**
+     * 求矩阵某一列的和
+     */
+    public static double sum(Matrix matrix, int colIndex){
+        double sum = 0.0;
+        for (int i = 0; i < matrix.getHeight(); i++) {
+            sum += matrix.get(i, colIndex);
+        }
+        return sum;
+    }
+
 
 }

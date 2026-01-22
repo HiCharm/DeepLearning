@@ -135,4 +135,38 @@ public class Matrix {
         return rows.get(rowIndex).get(colIndex);
     }
 
+    /**
+     * 将某一列tostring
+     */
+    public String columnToString(int colIndex) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < getHeight(); i++) {
+            sb.append(getRow(i).get(colIndex));
+            if (i < getHeight() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将某一行tostring
+     */
+    public String rowToString(int rowIndex) {
+        return rows.get(rowIndex).toString();
+    }
+
+    /**
+     * 将矩阵tostring
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < getHeight(); i++) {
+            sb.append(rowToString(i));
+            if (i < getHeight() - 1) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
 }
