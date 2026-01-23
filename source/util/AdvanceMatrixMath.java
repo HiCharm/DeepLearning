@@ -14,6 +14,7 @@ public class AdvanceMatrixMath {
      */
     public static void multiply(Matrix m1, Matrix m2, Matrix result) {
         if (m1.getWidth() != m2.getHeight()) {
+            System.out.println("m1 width: " + m1.getWidth() + ", m2 height: " + m2.getHeight());
             throw new IllegalArgumentException("Matrix multiplication not possible: m1 width must equal m2 height.");
         }
         if (result.getHeight() != m1.getHeight() || result.getWidth() != m2.getWidth()) {

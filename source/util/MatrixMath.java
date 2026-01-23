@@ -218,5 +218,38 @@ public class MatrixMath {
         return sum;
     }
 
-
+    /**
+     * 求矩阵某一列或某一行最大或最小的数
+     */
+    public static double max(Matrix matrix, int index, boolean isColumn, boolean isMax,boolean returnIndex){
+        double extremeValue;
+        if(isMax){
+            extremeValue = Double.NEGATIVE_INFINITY;
+        } else {
+            extremeValue = Double.POSITIVE_INFINITY;
+        }
+        int extremeIndex = -1;
+        if(isColumn){
+            for (int i = 0; i < matrix.getHeight(); i++) {
+                double value = matrix.get(i, index);
+                if((isMax && value > extremeValue) || (!isMax && value < extremeValue)){
+                    extremeValue = value;
+                    extremeIndex = i;
+                }
+            }
+        } else {
+            for (int i = 0; i < matrix.getWidth(); i++) {
+                double value = matrix.get(index, i);
+                if((isMax && value > extremeValue) || (!isMax && value < extremeValue)){
+                    extremeValue = value;
+                    extremeIndex = i;
+                }
+            }
+        }
+        if(returnIndex){
+            return extremeIndex;
+        } else {
+            return extremeValue;
+        }
+    }
 }

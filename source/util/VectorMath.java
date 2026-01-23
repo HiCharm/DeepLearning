@@ -1,6 +1,7 @@
 package source.util;
 
 import source.unit.Vector;
+import source.unit.Matrix;
 
 /**
  *  @HiCharm
@@ -232,6 +233,23 @@ public class VectorMath {
         multiply(scalar, v2, result);
     }
 
-
+    /**
+     * 向量转矩阵
+     */
+    public static Matrix vector2Matrix(Vector vector, boolean asColumn) {
+        if (asColumn) {
+            Matrix matrix = new Matrix(1,vector.size());
+            for (int i = 0; i < vector.size(); i++) {
+                matrix.rows.get(i).set(0, vector.get(i));
+            }
+            return matrix;
+        } else {
+            Matrix matrix = new Matrix(vector.size(),1);
+            for (int i = 0; i < vector.size(); i++) {
+                matrix.rows.get(0).set(i, vector.get(i));
+            }
+            return matrix;
+        }
+    }
 
 }
