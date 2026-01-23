@@ -48,9 +48,9 @@ public class FullyConnectNetWork extends NetWork {
         // 构建网络
         List<Integer> layerSizes = new ArrayList<>();
         layerSizes.add(train_images.getWidth());
-        layerSizes.add(24*12);
-        layerSizes.add(12*12);
-        layerSizes.add(6*6);
+        layerSizes.add(500);
+        layerSizes.add(200);
+        layerSizes.add(100);
         layerSizes.add(10);
         FullyConnectNetWork netWork = new FullyConnectNetWork(layerSizes);
 
