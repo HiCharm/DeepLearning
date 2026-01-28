@@ -1,12 +1,14 @@
 package source;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class Matrix {
     double[][] data;
 
     public Matrix(int height, int width) {
         data = new double[height][width];
+        fill(0);
     }
 
     public Matrix(double[][] data) {
@@ -138,7 +140,12 @@ public class Matrix {
         return rowVector;
     }
 
-
-
+    public void apply(Function<Double, Double> function) {
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                data[i][j] = function.apply(data[i][j]);
+            }
+        }
+    }
 
 }
