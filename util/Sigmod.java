@@ -1,4 +1,4 @@
-package source.util;
+package util;
 
 public class Sigmod {
     public static double forward(double x) {
