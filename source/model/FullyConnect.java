@@ -2,7 +2,8 @@ package source.model;
 
 import java.util.List;
 
-import Data.MINST.MNISTDataset.BatchData;
+import Data.MNIST.MNISTDataset;
+import Data.MNIST.MNISTDataset.BatchData;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,13 @@ public class FullyConnect {
         FullyConnectLayer outputLayer = layers.get(layers.size() - 1);
         // 计算输出层的delta
         Matrix delta = new Matrix(outputLayer.outputSize, 1);
+        // System.out.println("labels:");
+        // labels.show();
         for(int i = 0; i < delta.getHeight(); i++){
             delta.set(i,0, (labels.get(i,0) - outputLayer.output.get(i,0)) * outputLayer.activationBackward.apply(outputLayer.output.get(i,0)));
         }
+        // System.out.println("delta:");
+        // delta.show();
 
         for(int i = layers.size() - 1; i >= 0; i--) {
             layers.get(i).backward(delta);
@@ -45,6 +50,8 @@ public class FullyConnect {
     }
     public static boolean train_one_sample(Matrix input, int label, double learningRate) {
         Matrix predict_label = predict(input);
+        // System.out.println("predict_label:");
+        // predict_label.show();
         Matrix lables = new Matrix(10, 1);
         lables.set(label, 0, 1.0);
         calc_gradient(lables);
@@ -106,13 +113,14 @@ public class FullyConnect {
             layers.add(new FullyConnectLayer(layerSizes.get(i), layerSizes.get(i+1), Sigmod::forward, Sigmod::backward));
         }
 
-        String train_image_file = "Data\\MINST\\train-images.idx3-ubyte";
-        String train_label_file = "Data\\MINST\\train-labels.idx1-ubyte";
-        String test_image_file = "Data\\MINST\\t10k-images.idx3-ubyte";
-        String test_label_file = "Data\\MINST\\t10k-labels.idx1-ubyte";
 
-        Data.MINST.MNISTDataset train_dataset = new Data.MINST.MNISTDataset(train_image_file, train_label_file);
-        Data.MINST.MNISTDataset test_dataset = new Data.MINST.MNISTDataset(test_image_file, test_label_file);
+        String train_image_file = "Data\\MNIST\\train-images.idx3-ubyte";
+        String train_label_file = "Data\\MNIST\\train-labels.idx1-ubyte";
+        String test_image_file = "Data\\MNIST\\t10k-images.idx3-ubyte";
+        String test_label_file = "Data\\MNIST\\t10k-labels.idx1-ubyte";
+
+        MNISTDataset train_dataset = new MNISTDataset(train_image_file, train_label_file);
+        MNISTDataset test_dataset = new MNISTDataset(test_image_file, test_label_file);
 
         int train_count = 1000;
         BatchData train_batch = train_dataset.getBatch(0, train_count);
@@ -130,7 +138,7 @@ public class FullyConnect {
             test_lables.set(i, 0, test_batch.labels[i]);
         }
 
-        train(train_input, train_lables, 0.001, 100);
+        train(train_input, train_lables, 0.001, 80);
 
         test(test_input, test_lables);
 

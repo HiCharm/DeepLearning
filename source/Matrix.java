@@ -148,4 +148,23 @@ public class Matrix {
         }
     }
 
+    public double sum() {
+        double sum = 0;
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                sum += data[i][j];
+            }
+        }
+        return sum;
+    }
+
+    public void show() {
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }

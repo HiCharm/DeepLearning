@@ -36,6 +36,7 @@ public class ConvLayer {
         public Filter(int filterHeight, int filterWidth, int channel) {
             this.weights = new Tensor(channel, filterHeight, filterWidth);
             this.weights.randomize();
+            this.weights.multiply(0.1); // scale down for better initialization
             this.bias = 0;
         }
         public void update(double learningRate) {
@@ -110,6 +111,8 @@ public class ConvLayer {
     public void forward(Tensor input) {
         this.input = input;
         Tensor paddedTensor = padding(input, zp);
+        // reset output to avoid accumulation across multiple forward calls
+        this.output = new Tensor(filterNumber, outputHeight, outputWidth);
 
         for(int i = 0; i < filterNumber; i++) {
             Matrix output = new Matrix(outputHeight, outputWidth);
@@ -170,4 +173,34 @@ public class ConvLayer {
             }
         }
     }
+
+    public void bpGradient(Tensor delta) {
+        Tensor expandedDelta = expandDeltaTensor(delta);
+        for(int i = 0; i < filterNumber; i++){
+            Filter filter = filters.get(i);
+            filter.weights_grad = new Tensor(channel, filterHeight, filterWidth);
+            for(int j = 0; j < channel; j++){
+                for(int k = 0; k < filterHeight; k++){
+                    for(int l = 0; l < filterWidth; l++){
+                        double sum = 0;
+                        for(int oi = 0; oi < outputHeight; oi++){
+                            for(int oj = 0; oj < outputWidth; oj++){
+                                sum += expandedDelta.get(i).get(oi, oj) * padded_input.get(j).get(oi + k, oj + l);
+                            }
+                        }
+                        filter.weights_grad.get(j).set(k, l, sum);
+                    }
+                }
+            }
+            filter.bias_grad = expandedDelta.get(i).sum();
+        }
+    }
+
+    public void update() {
+        for(int i = 0; i < filterNumber; i++){
+            Filter filter = filters.get(i);
+            filter.update(learningRate);
+        }
+    }
+
 }

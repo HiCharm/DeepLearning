@@ -9,7 +9,7 @@ public class FullyConnectLayer {
     public int outputSize;
     public Function<Double, Double> activationFroward;
     public Function<Double, Double> activationBackward;
-    Matrix weights;
+    public Matrix weights;
     Matrix bias;
     Matrix weights_grad;
     Matrix bias_grad;
