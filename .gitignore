@@ -1,0 +1,19 @@
+.vs/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+
+# Python virtual environments
+Python/.venv/
+Python/venv/
+.venv/
+venv/
+
+# Experiment outputs
+Python/outputs/
+
+# Torch / dataset cache (optional)
+Python/.cache/
+

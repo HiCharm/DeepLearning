@@ -1,0 +1,36 @@
+project: DeepLearning-PyTorch
+run_name: mnist-lenet
+output_dir: ./outputs
+task: classification
+data:
+  name: mnist
+  data_dir: ./data
+  batch_size: 128
+  num_workers: 2
+  val_split: 0.1
+  image_size: 28
+  csv_path: null
+  target_col: null
+  feature_cols: null
+model:
+  name: lenet
+  num_classes: 10
+  in_features: null
+  hidden_sizes:
+  - 256
+  - 128
+  dropout: 0.0
+optim:
+  name: adam
+  lr: 0.001
+  weight_decay: 0.0
+  momentum: 0.9
+train:
+  epochs: 3
+  seed: 42
+  device: auto
+  amp: false
+  grad_clip_norm: null
+  log_every: 50
+  eval_every: 1
+  early_stopping_patience: 5

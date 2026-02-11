@@ -1,0 +1,30 @@
+project: DeepLearning-PyTorch
+run_name: cifar10-resnet
+output_dir: ./outputs
+task: classification
+
+data:
+  name: cifar10
+  data_dir: ./data
+  batch_size: 128
+  num_workers: 2
+  val_split: 0.1
+  image_size: 32
+
+model:
+  name: resnet18
+  num_classes: 10
+
+optim:
+  name: sgd
+  lr: 0.1
+  momentum: 0.9
+  weight_decay: 0.0005
+
+train:
+  epochs: 5
+  seed: 42
+  device: auto
+  amp: false
+  eval_every: 1
+
