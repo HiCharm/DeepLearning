@@ -2,7 +2,7 @@
 
 @HiCharm
 
-本项目是用于学习深度学习的 PyTorch 实验框架，包含工具库、数据集和模型算法，支持分类、回归任务，支持 MNIST、CIFAR10、CSV 表格数据等。
+本项目是用于学习深度学习的 PyTorch 实验框架，包含工具库、数据集和模型算法，支持分类、回归任务，支持 MNIST、CIFAR10、CSV 表格数据，以及 RFID（按坐标文件名分类）等。
 
 ---
 
@@ -135,7 +135,7 @@ python train.py --config configs/mnist_lenet.yaml
 7. 保存配置到 run_dir/config.yaml
        ↓
 8. 构建数据加载器 (build_dataloaders)
-   - MNIST / CIFAR10 / csv_regression / csv_classification
+   - MNIST / CIFAR10 / csv_regression / csv_classification / rfid
        ↓
 9. 构建模型 (build_model)
    - lenet / resnet18 / mlp / linear_regression / logistic_regression
@@ -254,7 +254,7 @@ pytest tests/ -v
 
 | 字段 | 说明 |
 |------|------|
-| `name` | mnist / cifar10 / csv_regression / csv_classification |
+| `name` | mnist / cifar10 / csv_regression / csv_classification / rfid |
 | `data_dir` | 数据根目录 |
 | `batch_size` | 批大小 |
 | `num_workers` | DataLoader 工作进程数 |
@@ -263,16 +263,24 @@ pytest tests/ -v
 | `csv_path` | CSV 文件路径（表格数据） |
 | `target_col` | 目标列名 |
 | `feature_cols` | 特征列名列表（可选，默认除 target 外所有列） |
+| `rfid_dir` | RFID 数据目录（可选，默认 `{data_dir}/RFID`） |
+| `rfid_glob` | RFID 文件匹配（默认 `*.csv`） |
+| `rfid_label_mode` | RFID 标签编码：observed（仅对存在文件做 0..K-1） / grid（固定网格） |
+| `rfid_grid_size` | grid 模式下坐标上限（默认 50，对应 0..50 共 51 个取值） |
+| `rfid_window_size` | RFID 时间窗口长度（步数）。1 表示逐行样本；>1 时将在同一坐标文件内按时间顺序滑动窗口构造 `[B,T,F]` 序列样本（当前仅在 `model.name=lstm` 时支持） |
 
 ### 5.3 模型配置 (model)
 
 | 字段 | 说明 |
 |------|------|
-| `name` | lenet / simplecnn / resnet18 / mlp / linear_regression / logistic_regression |
+| `name` | lenet / simplecnn / resnet18 / mlp / linear_regression / logistic_regression / lstm |
 | `num_classes` | 分类类别数 |
 | `in_features` | 输入特征维度（表格模型，可省略由数据推断） |
 | `hidden_sizes` | MLP 隐藏层维度列表 |
-| `dropout` | Dropout 比例 |
+| `dropout` | Dropout 比例（MLP、LSTM 的全局 dropout） |
+| `rnn_hidden_size` | LSTM 隐层维度（默认 64） |
+| `rnn_num_layers` | LSTM 堆叠层数（默认 1） |
+| `rnn_bidirectional` | LSTM 是否使用双向（默认 false） |
 
 ### 5.4 优化器配置 (optim)
 
@@ -306,6 +314,44 @@ pytest tests/ -v
 | CIFAR10 | 分类 | resnet18, simplecnn |
 | csv_regression | 回归 | linear_regression, mlp |
 | csv_classification | 分类 | logistic_regression, mlp |
+| RFID (x_y.csv) | 分类 | mlp, logistic_regression, lstm |
+
+---
+
+## 八、RFID + LSTM 示例
+
+### 8.1 配置文件
+
+已经提供一个示例配置 `configs/rfid_lstm.yaml`，其核心字段如下：
+
+- **顶层**
+  - `task: classification`
+- **data**
+  - `name: rfid`
+  - `data_dir: ./data`（默认会使用 `./data/RFID` 目录）
+  - `rfid_label_mode: observed`（按实际存在的坐标文件映射类别）
+  - `rfid_window_size: 5`（示例：使用长度为 5 的滑动时间窗口）
+  - `val_split: 0.2`
+- **model**
+  - `name: lstm`
+  - `rnn_hidden_size: 64`
+  - `rnn_num_layers: 1`
+  - `rnn_bidirectional: false`
+  - `dropout: 0.1`
+
+当 `rfid_window_size = 1`（默认）时，RFID 数据加载器会将每一行 RSSI 特征视为一个样本（形状为 `[B, F]`），
+LSTM 模型会自动将其视作单步序列（内部转换为 `[B, 1, F]`）。
+当 `rfid_window_size > 1` 且 `model.name = lstm` 时，会在同一坐标文件内部按时间顺序滑动窗口，
+构造 `[B, T, F]` 形式的序列样本，以便 LSTM 利用时间信息；窗口不会跨越不同坐标文件。
+
+### 8.2 训练命令
+
+```bash
+cd Python/src
+python train.py --config configs/rfid_lstm.yaml
+```
+
+输出目录形如 `outputs/rfid-lstm-cls-{时间戳}/`，结构与前文说明一致。
 
 ---
 
