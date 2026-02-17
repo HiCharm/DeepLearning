@@ -1,6 +1,8 @@
 import numpy as np
+import sys
+sys.path.append('d:/work/2026/DeepLearning')
 
-from model import Model, Layer
+from python.model.model import Layer, Model
 
 def step_function(x):
     if x > 0:
@@ -16,17 +18,25 @@ class Perceptron(Model):
         self.layer = PerceptronLayer(input_size, output_size, learning_rate)
 
     def train(self, X, Y):
-        self._train(X, Y)
+        for x, y in zip(X, Y):
+            self._train(x.reshape(1,-1), y)
 
     def predict(self, X):
-        return self.layer.forward(X)
+        ans = []
+        for x in X:
+            output = self.layer.forward(x.reshape(1,-1))
+            ans.append(output)
+            print(output)
+        print(self.layer)
+        return np.array(ans)
+
 
     def _train(self, X, Y):
-        for x, y in zip(X, Y):
-            output = self.layer.forward(x)
-            error = y - output
-            self.layer.backward(error)
-            self.layer.update(self.learning_rate)
+        output =self.layer.forward(X)
+        error = Y - output
+        self.layer.backward(error)
+        self.layer.update(self.learning_rate)
+        
 
 class PerceptronLayer(Layer):
     def __init__(self, input_size, output_size, learning_rate):
@@ -50,6 +60,6 @@ class PerceptronLayer(Layer):
         self.bias += learning_rate * self.db
 
     def __str__(self):
-        return f"PerceptronLayer(input_size={self.input_size}, output_size={self.output_size})"
+        return f"PerceptronLayer(input_size={self.input_size}, output_size={self.output_size}, weights={self.weights}, bias={self.bias})"
     
 

@@ -1,0 +1,44 @@
+{
+    
+   "python.terminal.executeInFileDir": false,
+   "terminal.integrated.cwd": "d:/work/2026/DeepLearning/python",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "python/model/A_site/__pycache__": true,
+        "python/model/__pycache__": true,
+        ".gitignore": true,
+        "python/model/A_site/__init__.py": true,
+        "python/model/__init__.py": true,
+        "python/test/A_site/dataset/__init__.py": true,
+        "python/test/A_site/evaluate/__init__.py": true,
+        "python/test/A_site/train/__init__.py": true,
+        "python/test/A_site/__init__.py": true,
+        "python/test/__init__.py": true,
+        "python/__init__.py": true,
+        "python/__pycache__": true,
+        "python/test/__pycache__": true,
+        "python/test/A_site/__pycache__": true,
+        "python/test/A_site/dataset/__pycache__": true
+    },
+    "hide-files.files": [
+        "python/model/A_site/__pycache__",
+        "python/model/__pycache__",
+        ".gitignore",
+        "python/model/A_site/__init__.py",
+        "python/model/__init__.py",
+        "python/test/A_site/dataset/__init__.py",
+        "python/test/A_site/evaluate/__init__.py",
+        "python/test/A_site/train/__init__.py",
+        "python/test/A_site/__init__.py",
+        "python/test/__init__.py",
+        "python/__init__.py",
+        "python/__pycache__",
+        "python/test/__pycache__",
+        "python/test/A_site/__pycache__",
+        "python/test/A_site/dataset/__pycache__"
+    ]
+}
